@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FileBlueprintSchema"
+    elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+    <xs:element name="Blueprint">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="InjectedObjectType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="File" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="File">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="FileMetadata" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="Header" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:choice>
+                    <xs:element name="RawNamespace" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="DynamicNamespace" type="DynamicString" minOccurs="1" maxOccurs="1"/>
+                </xs:choice>
+
+                <xs:element ref="Class" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DynamicString">
+        <xs:attribute name="InjectedObjectIndex" type="xs:unsignedInt" use="required"/>
+        <xs:attribute name="PropertyName" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="FileMetadata">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="FileNamePrefix" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:choice>
+                    <xs:element name="FileName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="DynamicFileName" type="DynamicString" minOccurs="1" maxOccurs="1"/>
+                </xs:choice>
+                <xs:element name="FileNameSuffix" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="FileExtension" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="AccessModifier" type="xs:string" default=""/>
+    <xs:attribute name="IsStatic" type="xs:boolean" default="false"/>
+
+    <xs:element name="Class">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="ClassMetadata" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Constructor" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Class" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Method" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute ref="AccessModifier"/>
+            <xs:attribute name="IsPartial" type="xs:boolean" default="false"/>
+            <xs:attribute ref="IsStatic"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ClassMetadata">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element name="ClassName" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="DynamicClassName" type="DynamicString" minOccurs="1" maxOccurs="1"/>
+                </xs:choice>
+                <xs:element name="Inherits" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="ReturnType" type="xs:string"/>
+    <xs:attribute name="Name" type="xs:string"/>
+
+    <xs:element name="Property">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref="RawContent" minOccurs="1" maxOccurs="1"/>
+                    <xs:element ref="DynamicContent" minOccurs="1" maxOccurs="1"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute ref="AccessModifier"/>
+            <xs:attribute ref="ReturnType" use="required"/>
+            <xs:attribute ref="Name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="RawContent" type="xs:string"/>
+    <xs:element name="DynamicContent">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="RawContent" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="Reference" type="DynamicString" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Constructor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element name="RawReturnType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="DynamicReturnType" type="DynamicString" minOccurs="1" maxOccurs="1"/>
+                </xs:choice>
+                <xs:element ref="Argument" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:choice>
+                    <xs:element ref="RawContent" minOccurs="1" maxOccurs="1"/>
+                    <xs:element ref="DynamicContent" minOccurs="1" maxOccurs="1"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute ref="AccessModifier"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Argument">
+        <xs:complexType>
+            <xs:attribute name="ArgumentType" type="xs:string" use="required"/>
+            <xs:attribute ref="Name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Method">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Argument" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:choice>
+                    <xs:element ref="RawContent"/>
+                    <xs:element ref="DynamicContent"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute ref="AccessModifier" use="required"/>
+            <xs:attribute ref="IsStatic"/>
+            <xs:attribute ref="ReturnType" use="required"/>
+            <xs:attribute ref="Name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

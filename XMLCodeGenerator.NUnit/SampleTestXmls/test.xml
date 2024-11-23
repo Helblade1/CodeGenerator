@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Blueprint 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+    xs:noNamespaceSchemaLocation="FileBlueprintSchema.xsd">
+    
+    <InjectedObjectType>APIEndpointSchema</InjectedObjectType>
+    
+    <File>
+        <FileMetadata>
+            <DynamicFileName InjectedObjectIndex="0" PropertyName="ClassName"/>
+            <FileNameSuffix>Genned</FileNameSuffix>
+            <FileExtension>cs</FileExtension>
+        </FileMetadata>
+
+        <Header>SmartVault.Net</Header>
+        <Header>SmartVault.Net.Http</Header>
+        <Header>SVault.Server.Rest.Implementation.Interfaces</Header>
+        <Header>SVault.Server.Web.Path.Interfaces</Header>
+        <DynamicNamespace InjectedObjectIndex="0" PropertyName="Namespace" />
+        
+        <Class AccessModifier="public" IsPartial="true">
+            <ClassMetadata>
+                <DynamicClassName InjectedObjectIndex="0" PropertyName="ClassName"/>
+            </ClassMetadata>
+            
+            <Property ReturnType="Context" Name="_context" AccessModifier="private">
+                <RawContent>{ get; set; }</RawContent>
+            </Property>
+            <Property ReturnType="RequiresAuthEnum" Name="RequiresAuth" AccessModifier="public">
+                <DynamicContent>
+                    <RawContent>
+                        {
+                            get { return Requires.@0; }
+                        }
+                    </RawContent>
+                    <Reference InjectedObjectIndex="0" PropertyName="RequiresAuth" />
+                </DynamicContent>
+            </Property>
+            
+            <Constructor AccessModifier="private">
+                <DynamicReturnType InjectedObjectIndex="0" PropertyName="ClassName" />
+                <Argument Name="context" ArgumentType="Context"/>
+                <RawContent>
+                    _context = context;
+                </RawContent>
+            </Constructor>
+
+            <Class AccessModifier="private" IsPartial="false">
+                <ClassMetadata>
+                    <ClassName>Factory</ClassName>
+                    <Inherits>IHandlerFactory</Inherits>
+                </ClassMetadata>
+                <Method AccessModifier="public" ReturnType="IHandler" Name="Create">
+                    <Argument ArgumentType="Context" Name="ctx" />
+                    <DynamicContent>
+                        <RawContent>
+                            return new @0(ctx)
+                        </RawContent>
+                        <Reference InjectedObjectIndex="0" PropertyName="ClassName" />
+                    </DynamicContent>
+                </Method>
+            </Class>
+
+            <Method AccessModifier="internal" ReturnType="void" Name="Register" IsStatic="true">
+                <Argument ArgumentType="RegisterCallbackDelegate" Name="callback" />
+                <DynamicContent>
+                    <RawContent>
+                        callback(HttpMethods.@0, Facilities.@1, PathScheme.@2, new Factory());
+                    </RawContent>
+                    <Reference InjectedObjectIndex="0" PropertyName="Verb"/>
+                    <Reference InjectedObjectIndex="0" PropertyName="Facility"/>
+                    <Reference InjectedObjectIndex="0" PropertyName="PathScheme"/>
+                </DynamicContent>
+            </Method>
+        </Class>
+    </File>
+
+</Blueprint>
